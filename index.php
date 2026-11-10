@@ -35,15 +35,8 @@ if (isset($_POST["action"]) && $_POST["action"] === "login") {
     } catch (PDOException $e) {
         echo "Error: " . $e->getMessage();
     }
-}
-if (isset($_POST["action"]) && $_POST["action"] === "logout") {
-    $_SESSION = [];
-    session_destroy();
-    $message = "Vous êtes déconnecté !";
-    $listUsers = "";
-}
 
-$users = $pdo->query(
+    $users = $pdo->query(
     "SELECT u.firstname, u.lastname, u.email, r.role, u.created_at
     FROM users u
     JOIN roles r ON u.Id_Role = r.Id_Role
@@ -58,8 +51,10 @@ foreach ($users as $user) {
         ." - ".htmlspecialchars($user["role"] ?? "" ?: "manager")
         ." - ".htmlspecialchars($user["created_at"])
         ."</li>";
-    }
+    } 
     
+
+} 
 $roles = $pdo->query(
     "SELECT r.role
      FROM roles r
@@ -70,6 +65,14 @@ foreach ($roles as $role) {
         .htmlspecialchars($role["role"])
         ."</option>";
     }
+if (isset($_POST["action"]) && $_POST["action"] === "logout") {
+    $_SESSION = [];
+    session_destroy();
+    $message = "Vous êtes déconnecté !";
+    $listUsers = "Connection requise pour voir la liste des utilisateurs.";
+}
+
+
 
 include './header.php';
 ?>
